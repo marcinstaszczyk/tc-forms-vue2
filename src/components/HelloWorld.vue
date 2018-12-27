@@ -33,9 +33,61 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
+const query = /* GraphQL */ `
+  {
+    dictAreas {
+      name
+    }
+  }
+`;
+
+// const mutation = `
+//   mutation createArea(
+//     $name: String!
+//     $group: String!
+//   ) {
+//     createArea(data: {
+//       name: $name
+//       status: PUBLISHED
+//       group: {
+//         connect: {
+//           name: $group
+//         }
+//       }
+//     }) {
+//       name
+//     }
+//   }
+// `;
+const mutation = `
+  mutation createIndex(
+    $name: String!
+  ) {
+    createDictIndex(data: {
+      name: $name
+      status: PUBLISHED
+    }) {
+      name
+    }
+  }
+`;
+
+const data = [];
+
+
 @Component
 export default class HelloWorld extends Vue {
   @Prop() private msg!: string;
+
+  private beforeCreate() {
+    this.$graphQL.request(query).then((data) => {
+      console.log(data);
+    });
+
+    // data.forEach((name) => {
+    //   this.$graphQL.request(mutation, { name, group: 'Pozostałe' });
+    // });
+  }
 }
 </script>
 
